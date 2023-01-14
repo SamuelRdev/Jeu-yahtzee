@@ -16,12 +16,21 @@ table img{
     width: 30px;
     height: 30px;
 }
-.render-view img{
-    width: 50px;
+.render-view{
+    display: flex;
+}
+.render-view .dice{
     height: 48px;
+    width: 50px;
+    margin-left: 15px;
+    border: 3px solid transparent;
+    position: relative;
+}
+.render-view img{
+    width: 100%;
+    height: 100%;
     /* object-fit: contain; */
     /* box-shadow: -5px 5px 4px 3px #383838; */
-    margin-left: 20px;
 }
 table{
     border-collapse: collapse;
@@ -95,4 +104,7 @@ border-header{
 }
 .cursor-pointer{
     cursor: pointer;
+}
+.render-view .dice.selected-dice{
+    border: 3px solid #C9bf16;
 }

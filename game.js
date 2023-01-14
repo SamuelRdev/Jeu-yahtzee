@@ -50,7 +50,7 @@ $(document).ready(function(){
                 const imageCollec = imagesArray[arrayKey]
                 diceValue.push(diceThrowed)
                 imgDice[i].src = imageCollec
-                // imgDice[i].addAttr('data-number', diceThrowed)
+                imgDice[i].parentNode.setAttribute('data-number', diceThrowed)
             }
             console.log(diceValue)
         }
@@ -60,6 +60,18 @@ $(document).ready(function(){
             body.removeClass('step-3').addClass('step-4')
         }else if(numberThrow === 3){
             $('.button-start').after('<span style="padding-left: 20px; color: red;">Vous n\'avez plus de lancés disponibles</span>')
+        }
+
+        if(numberThrow === 1){
+            $(".dice").click(function(){
+                $(this).toggleClass("selected-dice")
+                console.log(numberThrow)
+            })
+        }else{
+            console.log("NON")
+            if($(".dice").hasClass("selected-dice")){
+                $(".dice").removeClass("selected-dice")
+            }
         }
     })
 
