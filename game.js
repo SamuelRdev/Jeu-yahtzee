@@ -23,7 +23,7 @@ $(document).ready(function(){
         $(this).toggleClass('launcher')
         if(body.hasClass('step-1')){
             if($(this).hasClass('launcher')){
-                $(this).html('Jouer')
+                $(this).html('Cliquer pour jouer')
                 $(this).css({
                     'cursor' : 'pointer',
                 })
