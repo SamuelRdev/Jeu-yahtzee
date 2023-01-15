@@ -38,22 +38,32 @@ $(document).ready(function(){
     })
 
     //IN GAME FUNCTIONS  
-    var numberThrow = 0;
+    var numberThrow = 0
+    var diceValue = []
+    var finalDices = []
     $('.button-start').click(function(){
         numberThrow+=1
-        var numberOfDice = 6; 
-        var diceValue = []
+        var numberOfDice = 6
         if(numberThrow <= 2){
-            for(let i = 0; i<numberOfDice - 1; i++){
-                const diceThrowed = DiceThrow(1,6)
-                const arrayKey = diceThrowed - 1
-                const imageCollec = imagesArray[arrayKey]
-                diceValue.push(diceThrowed)
-                imgDice[i].src = imageCollec
-                imgDice[i].parentNode.setAttribute('data-number', diceThrowed)
+            if(!body.hasClass("reroll-init")){
+                diceValue = []
+                for(let i = 0; i<numberOfDice - 1; i++){
+                    const diceThrowed = diceThrow(1,6)
+                    const arrayKey = diceThrowed - 1
+                    const imageCollec = imagesArray[arrayKey]
+                    diceValue.push(diceThrowed)
+                    imgDice[i].src = imageCollec
+                    imgDice[i].parentNode.setAttribute('data-number', diceThrowed)
+                }
+                finalDices = diceValue
+            }else{
+                finalDices = rerollDice()
+                for(let i = 0; i<numberOfDice - 1; i++){
+                    imgDice[i].src = `./img/${finalDices[i]}.png`
+                }
             }
-            console.log(diceValue)
         }
+
         if(numberThrow === 1 && body.hasClass('step-2')){
             body.removeClass('step-2').addClass('step-3')
         }else if(numberThrow === 2 && body.hasClass('step-3')){
@@ -69,6 +79,11 @@ $(document).ready(function(){
         $(this).click(function(){
             if(body.hasClass("step-3")){
                 $(this).toggleClass("selected-dice")
+                if($(this).hasClass("selected-dice")){
+                    body.addClass('reroll-init')
+                }else{
+                    body.removeClass('reroll-init')
+                }
             }else{
                 if(!$(".only-once").length){
                     if(!body.hasClass("step-2")){
@@ -80,20 +95,23 @@ $(document).ready(function(){
     })
 
 
-    function DiceThrow(min, max)
+    function diceThrow(min, max)
     {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function rollDice() {
-        var dice = $(".selected-dice");
-        dice.each(function() {
-            var newValue = DiceThrow(1,6);
-            $(this).text(newValue);
-            diceValue.push(newValue);
+    function rerollDice() {
+        var selectedDice = $(".selected-dice");
+        var finalValues = []
+        selectedDice.each(function() {
+            var dicePosition = parseInt($(this).attr('id') - 1)
+            var diceNewValue = diceThrow(1,6)   
+            var index = $.inArray(diceValue[dicePosition], diceValue);
+            if (index >= 0) {
+                diceValue.splice(index, 1, diceNewValue);
+            }
         });
-        console.log("Roll values: " + diceValue);
+        finalValues = diceValue
+        return finalValues
     }
-
-
 })
