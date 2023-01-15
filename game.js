@@ -115,3 +115,20 @@ $(document).ready(function(){
         return finalValues
     }
 })
+
+/*CONDITIONS POUR LES POINTS TABLEAU DE DROITE*/
+// if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3] && diceValues[3] == diceValues[4]) {
+//     $("#score").text("Yahtzee! Vous avez gagné 50 points!");
+//   } else if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3]) {
+//     $("#score").text("Carré! Vous avez gagné 25 points!");
+//   } else if (diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3] && diceValues[3] == diceValues[4]) {
+//     $("#score").text("Carré! Vous avez gagné 25 points!");
+//   } else if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2]) {
+//     $("#score").text("Brelan! Vous avez gagné 15 points!");
+//   } else if (diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3]) {
+//     $("#score").text("Brelan! Vous avez gagné 15 points!");
+//   } else if (diceValues[2] == diceValues[3] && diceValues[3] == diceValues[4]) {
+//     $("#score").text("Brelan! Vous avez gagné 15 points!");
+//   } else {
+//     $("#score").text("Désolé, vous n'avez pas gagné de points cette fois-ci.");
+//   }
