@@ -63,8 +63,14 @@ $(document).ready(function(){
                     imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
                 }
             }
-            var points = checkPoints(finalDices)
-            console.log(points)
+            finalDices = [1,2,3,4,5]
+            var throwScore = checkPoints(finalDices)
+            console.log(throwScore)
+            var structured =  throwScore.structured
+            var simple =  throwScore.simple
+            animateStructured(structured)
+            animateSimple(simple)
+            $("#chance").addClass('disp-score')
         }
 
         if(numberThrow === 1 && body.hasClass('step-2')){
@@ -130,54 +136,42 @@ function countOccurences(arr) {
 
 function checkPoints(arr) {
     var counts = countOccurences(arr);
-    // var brelan = $('#brelan')
-    // var full = $('#full')
-    // var petiteSuite = $('#petite-suite')
-    // var grandeSuite = $('#grande-suite')
-    // var carre = $('#carre')
-    // var yahtzee = $('#yahtzee')
-    // var chance = false;
     var userScores = []
-    var scoreSimples = [] 
+    var scoreSimples = []
+    var structuredScores = []
+    var scoreChance = 0
     for (var i = 1; i <= 6; i++) {
         if (counts[i] == 2) {
             for (var j = 1; j <= 6; j++) {
                 if (i !== j && counts[j] == 3) {
-                    // full.addClass("disp-score")
-                    userScores.push('full')
+                    structuredScores.push('full')
                 }
             }
         }else if (counts[i] === 3) {
-            // brelan.addClass("disp-score")
-            userScores.push('brelan')
+            structuredScores.push('brelan')
         }else if(counts[i] === 4){
-            // carre.addClass("disp-score")
-            userScores.push('carre')
+            structuredScores.push('carre')
         }else if(counts[i] === 5){
-            // yahtzee.addClass("disp-score")
-            userScores.push('yahtzee')
+            structuredScores.push('yahtzee')
         }
-        // else{
-            // calculatePoints(arr)
-        // }
+        scoreChance += counts[i] * i
     }
     for (var i = 0; i < arr.length - 3; i++) {
         if (arr[i] + 1 == arr[i+1] && arr[i+1] + 1 == arr[i+2] && arr[i+2] + 1 == arr[i+3]) {
-            // petiteSuite.addClass("disp-score")
-            userScores.push('petite suite')
+            structuredScores.push('petite suite')
             break;
         }
     }
     for (var i = 0; i < arr.length - 4; i++) {
         if (arr[i] + 1 == arr[i+1] && arr[i+1] + 1 == arr[i+2] && arr[i+2] + 1 == arr[i+3] && arr[i+3] + 1 == arr[i+4]) {
-            // grandeSuite.addClass("disp-score")
-            userScores.push('grande suite')
+            structuredScores.push('grande suite')
             break;
         }
     }
     scoreSimples.push(calculatePoints(arr))
-    userScores["simple"] = scoreSimples;
-    // userScores.push(scoreSimples)
+    userScores["structured"] = structuredScores
+    userScores["simple"] = scoreSimples
+    userScores["chance"] = scoreChance
     return userScores
 }
 
@@ -188,4 +182,75 @@ function calculatePoints(arr) {
         points[i] = i * counts[i];
     }
     return points;
+}
+
+function animateStructured(arr){
+    for(let i = 0; i<arr.length; i++){
+        if(arr[i] === "brelan"){
+            $('#brelan').addClass("disp-score")
+        }else{
+            $('#brelan').removeClass("disp-score")
+        }
+        if (arr[i] === "full"){
+            $('#full').addClass("disp-score")
+        }else{
+            $('#full').removeClass("disp-score")
+        }
+        if (arr[i] === "petite suite" || (arr[i] === "petite suite" && arr[i] === "grande suite")){
+            $('#petite-suite').addClass("disp-score")
+        }else{
+            $('#petite-suite').removeClass("disp-score")
+        }
+        if (arr[i] === "grande suite"){
+            $('#grande-suite').addClass("disp-score")
+        }else{
+            $('#grande-suite').removeClass("disp-score")
+        }
+        if (arr[i] === "carre"){
+            $('#carre').addClass("disp-score")
+        }else{
+            $('#carre').removeClass("disp-score")
+        }
+        if (arr[i] === "yahtzee"){
+            $('#yahtzee').addClass("disp-score")
+        }else{
+            $('#yahtzee').removeClass("disp-score")
+        }
+    }
+}
+
+function animateSimple(arr){
+    for(let i = 0; i<arr.length; i++){
+        console.log(arr[i])
+        if(arr[i][1] > 0){
+            $('#score-one').addClass('disp-score')
+        }else{
+            $('#score-one').removeClass('disp-score')
+        }
+        if(arr[i][2] > 0){
+            $('#score-two').addClass('disp-score')
+        }else{
+            $('#score-two').removeClass('disp-score')
+        }
+        if(arr[i][3] > 0){
+            $('#score-three').addClass('disp-score')
+        }else{
+            $('#score-three').removeClass('disp-score')
+        }
+        if(arr[i][4] > 0){
+            $('#score-four').addClass('disp-score')
+        }else{
+            $('#score-four').removeClass('disp-score')
+        }
+        if(arr[i][5] > 0){
+            $('#score-five').addClass('disp-score')
+        }else{
+            $('#score-five').removeClass('disp-score')
+        }
+        if(arr[i][6] > 0){
+            $('#score-six').addClass('disp-score')
+        }else{
+            $('#score-six').removeClass('disp-score')
+        }
+    }
 }
