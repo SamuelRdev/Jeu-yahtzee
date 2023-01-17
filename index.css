@@ -116,3 +116,11 @@ border-header{
     align-items: center;
     justify-content: center;
 }
+
+.disp-score {
+    animation: blinker 4s linear infinite;
+}
+
+@keyframes blinker {  
+    50% { background-color: #C9bf1680; }
+}

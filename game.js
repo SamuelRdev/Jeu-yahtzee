@@ -63,7 +63,8 @@ $(document).ready(function(){
                     imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
                 }
             }
-            checkScore(finalDices)
+            finalDices = [5,5,5,3,3]
+            checkPoints(finalDices)
         }
 
         if(numberThrow === 1 && body.hasClass('step-2')){
@@ -116,25 +117,62 @@ $(document).ready(function(){
     }
 })
 
-/*CONDITIONS POUR LES POINTS TABLEAU DE DROITE*/
-function checkScore(finalDices){
-    if (finalDices[0] == finalDices[1] && finalDices[1] == finalDices[2] && finalDices[2] == finalDices[3] && finalDices[3] == finalDices[4]) {
-        console.log('yahtzee')
-    } else if (finalDices[0] == finalDices[1] && finalDices[1] == finalDices[2] && finalDices[2] == finalDices[3]) {
-        console.log("carre")
-    } else if (finalDices[1] == finalDices[2] && finalDices[2] == finalDices[3] && finalDices[3] == finalDices[4]) {
-        console.log("carre")
-    } else if (finalDices[0] == finalDices[1] && finalDices[1] == finalDices[2]) {
-        console.log("brelan")
-    } else if (finalDices[1] == finalDices[2] && finalDices[2] == finalDices[3]) {
-        console.log("brelan")
-    } else if (finalDices[2] == finalDices[3] && finalDices[3] == finalDices[4]) {
-        console.log("brelan")
-    } else {
-        for(let i = 0; i < finalDices.length; i++){
-            // if(finalDices[i] === finalDices[i]){
-                console.log(finalDices[i])
-            // }
+function countOccurences(arr) {
+    var counts = {};
+    for (var i = 1; i <= 6; i++) {
+        counts[i] = 0;
+    }
+    for (var i = 0; i < arr.length; i++) {
+        counts[arr[i]]++;
+    }
+    return counts;
+}
+
+function checkPoints(arr) {
+    var counts = countOccurences(arr);
+    var brelan = $('#brelan')
+    var full = $('#full')
+    var petiteSuite = $('#petite-suite')
+    var grandeSuite = $('#grande-suite')
+    var carre = $('#carre')
+    var yahtzee = $('#yahtzee')
+    var chance = false;
+    for (var i = 1; i <= 6; i++) {
+        if (counts[i] == 2) {
+            for (var j = 1; j <= 6; j++) {
+                if (i !== j && counts[j] == 3) {
+                    full.addClass("disp-score")
+                }
+            }
+        }else if (counts[i] === 3) {
+            brelan.addClass("disp-score")
+        }else if(counts[i] === 4){
+            carre.addClass("disp-score")
+        }else if(counts[i] === 5){
+            yahtzee.addClass("disp-score")
+        }else{
+            calculatePoints(arr)
         }
     }
+    for (var i = 0; i < arr.length - 3; i++) {
+        if (arr[i] + 1 == arr[i+1] && arr[i+1] + 1 == arr[i+2] && arr[i+2] + 1 == arr[i+3]) {
+            petiteSuite.addClass("disp-score")
+            break;
+        }
+    }
+    for (var i = 0; i < arr.length - 4; i++) {
+        if (arr[i] + 1 == arr[i+1] && arr[i+1] + 1 == arr[i+2] && arr[i+2] + 1 == arr[i+3] && arr[i+3] + 1 == arr[i+4]) {
+            grandeSuite.addClass("disp-score")
+            break;
+        }
+    }
+}
+
+function calculatePoints(arr) {
+    var counts = countOccurences(arr);
+    var points = {};
+    for (var i = 1; i <= 6; i++) {
+        points[i] = i * counts[i];
+    }
+    return points;
 }
