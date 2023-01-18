@@ -75,13 +75,19 @@ $(document).ready(function(){
             if(!$('#chance').hasClass('locked-score')){
                 $("#chance").addClass('disp-score')
             }
-            console.log(numberOfTurn)
-            console.log(numberThrow)
+
             $('.disp-score').each(function(){
                 $(this).click(function(){
                     if($(this).hasClass('disp-score')){
                         if($('.locked-score').length<numberOfTurn){
+                            console.log($('.locked-score').length)
+                            console.log(numberOfTurn)
                             $(this).addClass('locked-score')
+                            // $(this).toggleClass('locked-score')
+                        }else{
+                            $(this).removeClass('locked-score')
+                            console.log($('.locked-score').length)
+                            console.log(numberOfTurn)
                         }
                     }
                 })
