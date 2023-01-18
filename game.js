@@ -65,6 +65,7 @@ $(document).ready(function(){
                     imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
                 }
             }
+            console.log(finalDices)
             $('*').removeClass('disp-score')
             var throwScore = checkPoints(finalDices)
             var structured =  throwScore.structured
@@ -79,8 +80,9 @@ $(document).ready(function(){
             $('.disp-score').each(function(){
                 $(this).click(function(){
                     if($(this).hasClass('disp-score')){
-                        $(this).toggleClass("locked-score")
-                        console.log($(this))
+                        if($('.locked-score').length<numberOfTurn){
+                            $(this).addClass('locked-score')
+                        }
                     }
                 })
             })
