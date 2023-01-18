@@ -131,6 +131,9 @@ border-header{
 .locked-score td{
     color: #FFF;
 }
+.wasted{
+    background: red;
+}
 @keyframes blinker {  
     50% { background-color: #C9bf1680; }
 }
