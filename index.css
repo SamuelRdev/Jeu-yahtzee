@@ -120,7 +120,14 @@ border-header{
 .disp-score {
     animation: blinker 4s linear infinite;
 }
-
+.possible-score{
+    background-color: red;
+    animation: none!important;
+}
+.locked-score{
+    background-color: #383838;
+    animation: none!important;
+}
 @keyframes blinker {  
     50% { background-color: #C9bf1680; }
 }
