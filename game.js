@@ -74,22 +74,32 @@ $(document).ready(function(){
             if(!$('#chance').hasClass('locked-score')){
                 $("#chance").addClass('disp-score')
             }
-            
-            $('.disp-score').click(function(){
-                console.log("test")
-                if($(this).hasClass('disp-score')){
-                    $(this).toggleClass("locked-score")
-                }else{
-                    $(this).removeClass("locked-score")
-                }
+            console.log(numberOfTurn)
+            console.log(numberThrow)
+            $('.disp-score').each(function(){
+                $(this).click(function(){
+                    if($(this).hasClass('disp-score')){
+                        $(this).toggleClass("locked-score")
+                        console.log($(this))
+                    }
+                })
             })
-
+            
+            /*Réinitialise tout pour le tour suivant*/
             $('.button-continue').click(function(){
                 if($('.locked-score').length == numberOfTurn){
-                    $('.only-once').remove()
                     numberOfTurn++
-                    $('*').removeClass('disp-score')
                     numberThrow = 0
+                    $('.only-once').remove()
+                    $('*').removeClass('selected-dice')
+                    body.removeClass('reroll-init')
+                    $('*').removeClass('disp-score')
+                    body.removeClass('step-3')
+                    body.removeClass('step-4')
+                    body.addClass('step-2')
+                    $('.dice').each(function(){
+                        $(this).removeAttr('data-number')
+                    })
                 }
             })
         }
