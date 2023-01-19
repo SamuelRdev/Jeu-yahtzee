@@ -65,14 +65,13 @@ $(document).ready(function(){
                     imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
                 }
             }
+            finalDices = [4,4,4,4,5]
             $('*').removeClass('disp-score')
             var throwScore = checkPoints(finalDices)
             var structured =  throwScore.structured
             var simple =  throwScore.simple
             animateStructured(structured)
-            animateSimple(simple)
-            console.log(throwScore.structured)
-            console.log(throwScore.simple)
+            animateSimple(simple, throwScore)
             if(!$('#chance').hasClass('locked-score')){
                 $("#chance").addClass('disp-score')
             }
@@ -98,17 +97,17 @@ $(document).ready(function(){
                                 }else if($(this).attr('id') === 'chance'){
                                     $(this).children().last().text("somme")
                                 }else if($(this).attr('id') === 'score-one'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }else if($(this).attr('id') === 'score-two'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }else if($(this).attr('id') === 'score-three'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }else if($(this).attr('id') === 'score-four'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }else if($(this).attr('id') === 'score-five'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }else if($(this).attr('id') === 'score-six'){
-                                    $(this).children().last().text("x")
+                                    $(this).children().last().text($(this).children().last().attr('data-value'))
                                 }
                             }
                         }
@@ -130,6 +129,8 @@ $(document).ready(function(){
             
             /*Réinitialise tout pour le tour suivant*/
             $('.button-continue').click(function(){
+                var STPlayer = 0
+                // var STPlayerRight = 0
                 if($('.locked-score').length == numberOfTurn || $('.wasted').length + $('.locked-score').length == numberOfTurn){
                     numberOfTurn++
                     numberThrow = 0
@@ -143,6 +144,10 @@ $(document).ready(function(){
                     $('.dice').each(function(){
                         $(this).removeAttr('data-number')
                     })
+                    $('.score-left tbody tr.locked-score').each(function(){
+                        STPlayer += parseInt($(this).children().last().attr('data-value'))
+                    })
+                    $(".score-left #ST").children().last().text(STPlayer).css('font-weight', 'bold')
                 }
             })
         }
@@ -307,11 +312,12 @@ $(document).ready(function(){
         }
     }
     
-    function animateSimple(arr){
+    function animateSimple(arr, throwScore){
         for(let i = 0; i<arr.length; i++){
             if(arr[i][1] > 0){
                 if(!$('#score-one').hasClass('locked-score')){
                     $('#score-one').addClass('disp-score')
+                    $('#score-one').children().last().attr('data-value', throwScore.simple[0][1])
                 }
             }else{
                 $('#score-one').removeClass('disp-score')
@@ -319,6 +325,7 @@ $(document).ready(function(){
             if(arr[i][2] > 0){
                 if(!$('#score-two').hasClass('locked-score')){
                     $('#score-two').addClass('disp-score')
+                    $('#score-two').children().last().attr('data-value', throwScore.simple[0][2])
                 }
             }else{
                 $('#score-two').removeClass('disp-score')
@@ -326,6 +333,7 @@ $(document).ready(function(){
             if(arr[i][3] > 0){
                 if(!$('#score-three').hasClass('locked-score')){
                     $('#score-three').addClass('disp-score')
+                    $('#score-three').children().last().attr('data-value', throwScore.simple[0][3])
                 }
             }else{
                 $('#score-three').removeClass('disp-score')
@@ -333,6 +341,7 @@ $(document).ready(function(){
             if(arr[i][4] > 0){
                 if(!$('#score-four').hasClass('locked-score')){
                     $('#score-four').addClass('disp-score')
+                    $('#score-four').children().last().attr('data-value', throwScore.simple[0][4])
                 }
             }else{
                 $('#score-four').removeClass('disp-score')
@@ -340,6 +349,7 @@ $(document).ready(function(){
             if(arr[i][5] > 0){
                 if(!$('#score-five').hasClass('locked-score')){
                     $('#score-five').addClass('disp-score')
+                    $('#score-five').children().last().attr('data-value', throwScore.simple[0][5])
                 }
             }else{
                 $('#score-five').removeClass('disp-score')
@@ -347,6 +357,7 @@ $(document).ready(function(){
             if(arr[i][6] > 0){
                 if(!$('#score-six').hasClass('locked-score')){
                     $('#score-six').addClass('disp-score')
+                    $('#score-six').children().last().attr('data-value', throwScore.simple[0][6])
                 }
             }else{
                 $('#score-six').removeClass('disp-score')
