@@ -11,6 +11,7 @@ $(document).ready(function(){
     var diceValue = []
     var finalDices = []
     var numberOfTurn = 1
+    var totalOfValues = 13
 
     body.addClass('step-1')
     header.css('height', '100vh')
@@ -65,50 +66,24 @@ $(document).ready(function(){
                     imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
                 }
             }
-            finalDices = [4,4,4,4,5]
             $('*').removeClass('disp-score')
             var throwScore = checkPoints(finalDices)
             var structured =  throwScore.structured
             var simple =  throwScore.simple
-            animateStructured(structured)
+            animateStructured(structured, throwScore, finalDices)
             animateSimple(simple, throwScore)
             if(!$('#chance').hasClass('locked-score')){
                 $("#chance").addClass('disp-score')
+                $("#chance").children().last().attr('data-value', throwScore.chance)
             }
-
+            console.log(throwScore)
             if($('.disp-score').length > 0){
                 $('.disp-score').each(function(){
                     $(this).click(function(){
                         if($(this).hasClass('disp-score')){
                             if($('.locked-score').length<numberOfTurn || $('.locked-score').length + $('.wasted').length < numberOfTurn){
                                 $(this).addClass('locked-score')
-                                if($(this).attr('id') === 'petite-suite'){
-                                    $(this).children().last().text("30")
-                                }else if($(this).attr('id') === 'grande-suite'){
-                                    $(this).children().last().text("40")
-                                }else if($(this).attr('id') === 'full'){
-                                    $(this).children().last().text("25")
-                                }else if($(this).attr('id') === 'brelan'){
-                                    $(this).children().last().text("somme")
-                                }else if($(this).attr('id') === 'carre'){
-                                    $(this).children().last().text("somme")
-                                }else if($(this).attr('id') === 'yahtzee'){
-                                    $(this).children().last().text("50")
-                                }else if($(this).attr('id') === 'chance'){
-                                    $(this).children().last().text("somme")
-                                }else if($(this).attr('id') === 'score-one'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }else if($(this).attr('id') === 'score-two'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }else if($(this).attr('id') === 'score-three'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }else if($(this).attr('id') === 'score-four'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }else if($(this).attr('id') === 'score-five'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }else if($(this).attr('id') === 'score-six'){
-                                    $(this).children().last().text($(this).children().last().attr('data-value'))
-                                }
+                                $(this).children().last().text($(this).children().last().attr('data-value'))
                             }
                         }
                     })
@@ -130,7 +105,7 @@ $(document).ready(function(){
             /*Réinitialise tout pour le tour suivant*/
             $('.button-continue').click(function(){
                 var STPlayer = 0
-                // var STPlayerRight = 0
+                var scoreRight = 0
                 if($('.locked-score').length == numberOfTurn || $('.wasted').length + $('.locked-score').length == numberOfTurn){
                     numberOfTurn++
                     numberThrow = 0
@@ -147,7 +122,22 @@ $(document).ready(function(){
                     $('.score-left tbody tr.locked-score').each(function(){
                         STPlayer += parseInt($(this).children().last().attr('data-value'))
                     })
+                    if($('.score-left tbody tr.locked-score').length === 6 || $('.score-left tbody tr.locked-score').length + $('.score-left tbody tr.wasted').length === 6){
+                        if(STPlayer > 63){
+                            STPlayer += 35
+                            $(".score-left #prime").children().last().text('35').css('font-weight', 'bold')
+                        }else{
+                            $(".score-left #prime").children().last().text('0').css('font-weight', 'bold')
+                        }
+                        $(".score-left #total-left").children().last().text(STPlayer).css('font-weight', 'bold')
+                    }
                     $(".score-left #ST").children().last().text(STPlayer).css('font-weight', 'bold')
+
+                    $('.score-right tbody tr.locked-score').each(function(){
+                        scoreRight += parseInt($(this).children().last().attr('data-value'))
+                    })
+                    $(".score-right #total-combinaisons").children().last().text(scoreRight).css('font-weight', 'bold')
+                    $(".score-right #total-jeu").children().last().text(scoreRight + STPlayer).css('font-weight', 'bold')
                 }
             })
         }
@@ -230,6 +220,7 @@ $(document).ready(function(){
                 structuredScores.push('carre')
             }else if(counts[i] === 5){
                 structuredScores.push('yahtzee')
+                structuredScores.push('carre')
             }
             scoreChance += counts[i] * i
         }
@@ -261,53 +252,60 @@ $(document).ready(function(){
         return points;
     }
     
-    function animateStructured(arr){
+    function animateStructured(arr, throwScore, finalDices){
         for(let i = 0; i<arr.length; i++){
             if(arr[i] === "brelan"){
                 if(!$('#brelan').hasClass('locked-score')){
                     $('#brelan').addClass("disp-score")
-                }
-            }else{
-                if(arr[i] !== "full"){
-                    $('#brelan').removeClass("disp-score")
+                    $('#brelan').children().last().attr('data-value', throwScore.chance)
                 }
             }
             if (arr[i] === "full"){
                 if(!$('#full').hasClass('locked-score')){
                     $('#full').addClass("disp-score")
+                    $('#full').children().last().attr('data-value', "25")
                 }
-            }else{
-                $('#full').removeClass("disp-score")
             }
             if (arr[i] === "petite suite"){
                 if(!$('#petite-suite').hasClass('locked-score')){
                     $('#petite-suite').addClass("disp-score")
-                }
-            }else{
-                if(arr[i] !== "grande suite"){
-                    $('#petite-suite').removeClass("disp-score")
+                    $('#petite-suite').children().last().attr('data-value', '30')
                 }
             }
             if (arr[i] === "grande suite"){
                 if(!$('#grande-suite').hasClass('locked-score')){
                     $('#grande-suite').addClass("disp-score")
+                    $('#grande-suite').children().last().attr('data-value', '40')
                 }
-            }else{
-                $('#grande-suite').removeClass("disp-score")
             }
             if (arr[i] === "carre"){
                 if(!$('#carre').hasClass('locked-score')){
                     $('#carre').addClass("disp-score")
+                    var carre_value = []
+                    var occurencesCounter = countOccurences(finalDices)
+                    var yahtzeeSoustr = 0
+                    for(let i=1; i<6; i++){
+                        carre_value.push(throwScore.simple[0][i])
+                        if(occurencesCounter[i] !== 0){
+                            yahtzeeSoustr = i
+                        }
+                    }
+                    carre_value.sort()
+                    var returnedValue = carre_value[carre_value.length - 1]
+                    if($.inArray("yahtzee", throwScore.structured)){
+                        $('#carre').children().last().attr('data-value', returnedValue - yahtzeeSoustr)
+                    }else{
+                        $('#carre').children().last().attr('data-value', returnedValue)
+                    }
+                    console.log('carre')
                 }
-            }else{
-                $('#carre').removeClass("disp-score")
             }
             if (arr[i] === "yahtzee"){
+                console.log('yahtzee')
                 if(!$('#yahtzee').hasClass('locked-score')){
                     $('#yahtzee').addClass("disp-score")
+                    $('#yahtzee').children().last().attr('data-value', '50')
                 }
-            }else{
-                $('#yahtzee').removeClass("disp-score")
             }
         }
     }
