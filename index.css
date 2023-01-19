@@ -1,5 +1,6 @@
 body *{
     box-sizing: border-box;
+    transition: .3s;
 }
 body{
     margin: 0;
@@ -83,6 +84,18 @@ main.main-content .button-div .button-start:hover{
     background-color: #C9bf16;
     border-color: #383838;
 }
+main.main-content .button-div .button-continue{
+    color: #383838;
+    background-color: #C9bf16;
+    border: 3px solid #383838;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+main.main-content .button-div .button-continue:hover{
+    color: #C9bf16;
+    background-color: #383838;
+    border-color: #C9bf16;
+}
 main.main-content .render-view{
     margin-top: 50px;
 }
@@ -136,4 +149,55 @@ border-header{
 }
 @keyframes blinker {  
     50% { background-color: #C9bf1680; }
+}
+
+#game-finished{
+    background-color: #C9bf16;
+    padding: 50px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+#game-finished h1{
+    color: #383838;
+    margin-bottom: 50px;
+}
+#game-finished p{
+    color: #383838;
+    margin-bottom: 50px;
+}
+#game-finished button{
+    color: #C9bf16;
+    background-color: #383838;
+    border: 3px solid #C9bf16;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+#game-finished button:hover{
+    color: #383838;
+    background-color: #C9bf16;
+    border-color: #383838;
+}
+.restart-button{
+    margin-left: 5px;
+    color: #383838;
+    background-color: transparent;
+    border: 3px solid #383838;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.restart-button:hover{
+    margin-left: 5px;
+    color: red;
+    background-color: transparent;
+    border: 3px solid red;
+    padding: 10px 20px;
+    cursor: pointer;
 }

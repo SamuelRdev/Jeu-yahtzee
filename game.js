@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $("#game-finished").hide()
     // GAME INITIALISATION + LAUNCHER TILL STEP 2
     const header = $('header')
     const headerButton = $('header h1')
@@ -60,12 +61,26 @@ $(document).ready(function(){
                 }
                 finalDices = diceValue
             }else{
-                finalDices = rerollDice()
-                for(let i = 0; i<numberOfDice - 1; i++){
-                    imgDice[i].src = `./img/${finalDices[i]}.png`
-                    imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
+                if($('.selected-dice').length === 0){
+                    diceValue = []
+                    for(let i = 0; i<numberOfDice - 1; i++){
+                        const diceThrowed = diceThrow(1,6)
+                        const arrayKey = diceThrowed - 1
+                        const imageCollec = imagesArray[arrayKey]
+                        diceValue.push(diceThrowed)
+                        imgDice[i].src = imageCollec
+                        imgDice[i].parentNode.setAttribute('data-number', diceThrowed)
+                    }
+                    finalDices = diceValue
+                }else{
+                    finalDices = rerollDice()
+                    for(let i = 0; i<numberOfDice - 1; i++){
+                        imgDice[i].src = `./img/${finalDices[i]}.png`
+                        imgDice[i].parentNode.setAttribute('data-number', finalDices[i])
+                    }
                 }
             }
+            console.log(finalDices)
             $('*').removeClass('disp-score')
             var throwScore = checkPoints(finalDices)
             var structured =  throwScore.structured
@@ -76,7 +91,6 @@ $(document).ready(function(){
                 $("#chance").addClass('disp-score')
                 $("#chance").children().last().attr('data-value', throwScore.chance)
             }
-            console.log(throwScore)
             if($('.disp-score').length > 0){
                 $('.disp-score').each(function(){
                     $(this).click(function(){
@@ -136,8 +150,15 @@ $(document).ready(function(){
                     $('.score-right tbody tr.locked-score').each(function(){
                         scoreRight += parseInt($(this).children().last().attr('data-value'))
                     })
+
                     $(".score-right #total-combinaisons").children().last().text(scoreRight).css('font-weight', 'bold')
                     $(".score-right #total-jeu").children().last().text(scoreRight + STPlayer).css('font-weight', 'bold')
+
+                    if($('.locked-score').length + $('.wasted').length === 13){
+                        $("#game-finished #finished-text").text(`Vous avez marqué ${scoreRight + STPlayer} points en ${numberOfTurn} tours de jeu.`)
+                        $("#game-finished").show()
+                        $('.button-continue').after('<button class="restart-button" onClick="window.location.reload();">Rejouer</button>')
+                    }
                 }
             })
         }
@@ -157,11 +178,7 @@ $(document).ready(function(){
         $(this).click(function(){
             if(body.hasClass("step-3")){
                 $(this).toggleClass("selected-dice")
-                if($(this).hasClass("selected-dice")){
-                    body.addClass('reroll-init')
-                }else{
-                    body.removeClass('reroll-init')
-                }
+                body.addClass('reroll-init')
             }else{
                 if(!$(".only-once").length){
                     if(!body.hasClass("step-2")){
@@ -183,6 +200,7 @@ $(document).ready(function(){
         selectedDice.each(function() {
             var dicePosition = parseInt($(this).attr('id') - 1)
             var diceNewValue = diceThrow(1,6)   
+            console.log('Position : ' + parseInt(dicePosition + 1) + ' devient : ' + diceNewValue)
             diceValue.splice(dicePosition, 1, diceNewValue);
         });
         finalValues = diceValue
@@ -297,11 +315,9 @@ $(document).ready(function(){
                     }else{
                         $('#carre').children().last().attr('data-value', returnedValue)
                     }
-                    console.log('carre')
                 }
             }
             if (arr[i] === "yahtzee"){
-                console.log('yahtzee')
                 if(!$('#yahtzee').hasClass('locked-score')){
                     $('#yahtzee').addClass("disp-score")
                     $('#yahtzee').children().last().attr('data-value', '50')
@@ -362,4 +378,8 @@ $(document).ready(function(){
             }
         }
     }
+
+    $('#close-it').click(function(){
+        $('#game-finished').hide()
+    })
 })
