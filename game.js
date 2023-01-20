@@ -13,6 +13,9 @@ $(document).ready(function(){
     var finalDices = []
     var numberOfTurn = 1
     var totalOfValues = 13
+    if($('.locked_score').length === 0){
+        localStorage.clear()
+    }
 
     body.addClass('step-1')
     header.css('height', '100vh')
@@ -48,6 +51,7 @@ $(document).ready(function(){
     $('.button-start').click(function(){
         numberThrow+=1
         var numberOfDice = 6
+        var validatedValue = []
         if(numberThrow <= 2){
             if(!body.hasClass("reroll-init")){
                 diceValue = []
@@ -80,7 +84,6 @@ $(document).ready(function(){
                     }
                 }
             }
-            console.log(finalDices)
             $('*').removeClass('disp-score')
             var throwScore = checkPoints(finalDices)
             var structured =  throwScore.structured
@@ -109,13 +112,13 @@ $(document).ready(function(){
                             $(this).click(function(){
                                 if($('.locked-score').length + $('.wasted').length < numberOfTurn && numberThrow > 1){
                                     $(this).addClass('wasted')
+                                    $(this).children().last().text("0")
                                 }
                             })
                         }
                     }
                 })
             }
-            
             /*Réinitialise tout pour le tour suivant*/
             $('.button-continue').click(function(){
                 var STPlayer = 0
@@ -155,6 +158,14 @@ $(document).ready(function(){
                     $(".score-right #total-jeu").children().last().text(scoreRight + STPlayer).css('font-weight', 'bold')
 
                     if($('.locked-score').length + $('.wasted').length === 13){
+                        $(".locked-score").each(function(){
+                            var index = $(this).attr("data-index")
+                            var value = $(this).children().last().attr('data-value')
+                            validatedValue.push({key:index, value:value})
+                        })
+                        var totalJoueur = parseInt(scoreRight) + parseInt(STPlayer)
+                        saveToLocalStorage(validatedValue, totalJoueur)
+                        console.log(localStorage)
                         $("#game-finished #finished-text").text(`Vous avez marqué ${scoreRight + STPlayer} points en ${numberOfTurn} tours de jeu.`)
                         $("#game-finished").show()
                         $('.button-continue').after('<button class="restart-button" onClick="window.location.reload();">Rejouer</button>')
@@ -169,7 +180,7 @@ $(document).ready(function(){
             body.removeClass('step-3').addClass('step-4')
         }else if(numberThrow === 3){
             if(!$(".only-once").length){
-                $('.button-start').after('<span style="padding-left: 20px; color: red;" class="only-once">Vous n\'avez plus de lancés disponibles</span>')
+                $('.button-continue').after('<span style="padding-left: 20px; color: red;" class="only-once">Vous n\'avez plus de lancés disponibles</span>')
             }
         }
     })
@@ -182,7 +193,7 @@ $(document).ready(function(){
             }else{
                 if(!$(".only-once").length){
                     if(!body.hasClass("step-2")){
-                        $('.button-start').after('<span style="padding-left: 20px; color: red;" class="only-once">Vous n\'avez plus de lancés disponibles</span>')
+                        $('.button-continue').after('<span style="padding-left: 20px; color: red;" class="only-once">Vous n\'avez plus de lancés disponibles</span>')
                     }
                 }
             }
@@ -200,7 +211,6 @@ $(document).ready(function(){
         selectedDice.each(function() {
             var dicePosition = parseInt($(this).attr('id') - 1)
             var diceNewValue = diceThrow(1,6)   
-            console.log('Position : ' + parseInt(dicePosition + 1) + ' devient : ' + diceNewValue)
             diceValue.splice(dicePosition, 1, diceNewValue);
         });
         finalValues = diceValue
@@ -382,4 +392,17 @@ $(document).ready(function(){
     $('#close-it').click(function(){
         $('#game-finished').hide()
     })
+
+    $('.restart-button').click(function(){
+        localStorage.clear()
+    })
+
+    function saveToLocalStorage(validValue, total) {
+        var saverObject = {}
+        $.each(validValue, function(index, item) {
+            saverObject[item.key] = item.value;
+        });
+        saverObject["Total du joueur"] = total;
+        localStorage.setItem("Score joueurs", JSON.stringify(saverObject));
+    }
 })
